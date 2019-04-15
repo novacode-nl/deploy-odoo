@@ -9,9 +9,9 @@ packages to install.
 
 Example branches:
 
-- `11.0`: Production
-- `11.0-staging`: Staging
-- `11.0-dev`: Development
+- `12.0`: Production
+- `12.0-staging`: Staging
+- `12.0-dev`: Development
 
 ## 1. Docker
 
