@@ -38,9 +38,9 @@ Example:
 
 `git clone https://github.com/novacode-nl/deploy-odoo.git novacode`
 
-### Change configuration if needed
+### Configuration
 
-- `cd <PROJECT>`
+Make changes if needed.
 
 - `docker-compose.yml`
   - Odoo ports mapping and such.
@@ -51,7 +51,7 @@ Example:
 - `docker/odoo/Dockerfile`
   - **Ubuntu** version.
 
-- `deploy/install_odoo_server.py
+- `deploy/install_odoo_server.py`
   - Add/change OS and Python packages
 **!! TODO shall be moved to `config.cfg` !!**
 
