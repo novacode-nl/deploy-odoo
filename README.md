@@ -1,19 +1,6 @@
 # deploy-odoo
 
-## Recommendations
-
-### Git clone
-
-Avoid clashed in Docker containers (naming) by cloning into a named
-target.
-
-`git clone <URL>/deploy-odoo.git <PROJECT-NAME>`
-
-Example:
-
-`git clone https://github.com/novacode-nl/deploy-odoo.git novacode`
-
-### Branches
+## Branches recommendation
 
 It's strongly recommended to work with (Git) branches, to distinguish
 deployment stages (dev, staging, production).
@@ -40,21 +27,39 @@ Install Docker Compose by Python pip. To get latest stable version.
 
 `pip3 install docker-compose`
 
-### Project Bootstrap
+### Git clone
 
-1. Fork this repo to `<PROJECT>-docker-odoo`
-2. `git clone <PROJECT>-docker-odoo`
-3. cd `<PROJECT>-docker-odoo`
-4. Edit `docker-compose.yml`. Change (Odoo) ports mapping.
-5. Edit `docker/db/Dockerfile`.
-    - Change **PostreSQL** version.
-6. Edit `docker/odoo/Dockerfile`
-    - Change **Ubuntu** version
-    - Add/change OS and Python packages
-7. Copy `config.cfg.docker` to `config.cfg`. Change settings if needed.
-8. Put **Odoo Core** into `<PROJECT>/odoo/odoo`
-9. Put **Enterprise** (if) into `<PROJECT>/odoo/enterprise`
-10. Put **Custom** (if) into `<PROJECT>/odoo/custom`
+To avoid clashes in Docker containers (naming), clone into a named
+target.
+
+`git clone <URL>/deploy-odoo.git <PROJECT>`
+
+Example:
+
+`git clone https://github.com/novacode-nl/deploy-odoo.git novacode`
+
+### Configuration
+
+Make changes if needed.
+
+- `docker-compose.yml`
+  - Odoo ports mapping and such.
+
+- `docker/db/Dockerfile`
+  - **PostreSQL** version.
+
+- `docker/odoo/Dockerfile`
+  - **Ubuntu** version.
+
+- `deploy/install_odoo_server.py`
+  - Add/change OS and Python packages
+**!! TODO shall be moved to `config.cfg` !!**
+
+- Copy `config.cfg.docker` to `config.cfg`. Change settings if needed.
+
+- Put **Odoo Core** into `<PROJECT>/odoo/odoo`
+- Put **Enterprise** (if) into `<PROJECT>/odoo/enterprise`
+- Put **Custom** (if) into `<PROJECT>/odoo/custom`
 
 ### Install (init)
 
@@ -73,6 +78,26 @@ Installs the Docker containers with required packages (OS, Python etc).
 - Start the Odoo server.
 
 ## Deploy - Cloud / on-premise
+
+### Requirement
+
+It's a requirement to `git clone` under `/root` (home-dir of root user).
+
+```
+cd /root
+git clone <URL>/deploy-odoo.git
+```
+
+Example:
+
+```
+cd /root
+git clone https://github.com/novacode-nl/deploy-odoo.git
+```
+
+Shall result in:
+
+`/root/deploy-odoo`
 
 ### Install PostgreSQL server
 
