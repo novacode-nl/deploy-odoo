@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+
+import os
+import subprocess
+
+os.chdir('/root/deploy-odoo/deploy')
+
+from deploy import Deploy
+deploy = Deploy()
+
+# deploy.build_odoo()
+deploy.odoo_core()
+deploy.odoo_enterprise()
+deploy.odoo_custom()
+deploy.switch_current_build()
+
+print('\n==== Odoo configuration ====')
+print('(i) build_dir: %s' % deploy.build_dir)
+print('(i) odoo_bin: %s\n' % deploy.odoo_bin)
+
+subprocess.call(deploy.odoo_bin, shell=True)

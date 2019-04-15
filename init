@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -e
+
+# --no-cache to avoid mirror errors (not found) etc.
+docker-compose build

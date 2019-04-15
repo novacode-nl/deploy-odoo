@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  db:
+    build: ./docker/db
+    # TODO
+    # environment:
+    #   - POSTGRES_DB=postgres
+    #   - POSTGRES_PASSWORD=odoo
+    #   - POSTGRES_USER=odoo
+    #   - PGDATA=/var/lib/postgresql/data/pgdata
+    # volumes:
+    #   # docker-compose restart db (reload config too)
+    #   - ./services/db/postgresql.conf:/var/lib/postgresql/data/postgresql.conf
+  odoo:
+    build:
+      context: ./
+      dockerfile: ./docker/odoo/Dockerfile
+    command: ./root/deploy-odoo/deploy/runit
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./deploy:/root/deploy-odoo/deploy
+      - ./deploy/runit:/roo/deploy-odoo/deploy/runit
+      # For Docker always asume development (dev) mode.
+      - ./odoo/odoo:/opt/odoo/dev/odoo
+      - ./odoo/enterprise:/opt/odoo/dev/enterprise
+      - ./odoo/custom:/opt/odoo/dev/custom
+    depends_on:
+      - db
+    ports:
+      # XXX
+      # - Ensure (and share) Odoo port equals: services/odoo/odoo.conf/example.
+      # - Keep port mapping equal to ensure `report.url` works.
+      - 8069:8069
