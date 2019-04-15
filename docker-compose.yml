@@ -23,13 +23,11 @@ services:
       - ./deploy:/root/deploy-odoo/deploy
       - ./deploy/runit:/roo/deploy-odoo/deploy/runit
       # For Docker always asume development (dev) mode.
-      - ./odoo/odoo:/opt/odoo/dev/odoo
-      - ./odoo/enterprise:/opt/odoo/dev/enterprise
-      - ./odoo/custom:/opt/odoo/dev/custom
+      - ./odoo:/opt/odoo/dev
     depends_on:
       - db
     ports:
       # XXX
-      # - Ensure (and share) Odoo port equals: services/odoo/odoo.conf/example.
+      # - Ensure (Odoo) port equals: deploy/config.cfg
       # - Keep port mapping equal to ensure `report.url` works.
       - 8069:8069
