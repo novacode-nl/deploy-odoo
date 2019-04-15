@@ -1,19 +1,6 @@
 # deploy-odoo
 
-## Recommendations
-
-### Git clone
-
-Avoid clashed in Docker containers (naming) by cloning into a named
-target.
-
-`git clone <URL>/deploy-odoo.git <PROJECT-NAME>`
-
-Example:
-
-`git clone https://github.com/novacode-nl/deploy-odoo.git novacode`
-
-### Branches
+## Branches recommendation
 
 It's strongly recommended to work with (Git) branches, to distinguish
 deployment stages (dev, staging, production).
@@ -27,6 +14,17 @@ Example branches:
 - `11.0-dev`: Development
 
 ## Deploy - Docker
+
+### Git clone - recommendation
+
+Avoid clashed in Docker containers (naming) by cloning into a named
+target.
+
+`git clone <URL>/deploy-odoo.git <PROJECT-NAME>`
+
+Example:
+
+`git clone https://github.com/novacode-nl/deploy-odoo.git novacode`
 
 ### Requirements
 
@@ -73,6 +71,26 @@ Installs the Docker containers with required packages (OS, Python etc).
 - Start the Odoo server.
 
 ## Deploy - Cloud / on-premise
+
+### Requirement
+
+It's a requirement to `git clone` under `/root` (home-dir of root user).
+
+```
+cd /root
+git clone <URL>/deploy-odoo.git
+```
+
+Example:
+
+```
+cd /root
+git clone https://github.com/novacode-nl/deploy-odoo.git
+```
+
+Shall result in:
+
+`/root/deploy-odoo`
 
 ### Install PostgreSQL server
 
