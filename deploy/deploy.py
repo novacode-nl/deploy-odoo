@@ -32,6 +32,8 @@ class Deploy:
         else:
             self.build_name = str(uuid.uuid4())
 
+        self.supervisor = True if self.config['server.odoo'].get('supervisor', False) == 'True' else False
+
         self.build_dir = '/opt/odoo/{build_name}'.format(build_name=self.build_name)
         self.current_build = '/opt/odoo/current'
         
@@ -225,7 +227,8 @@ class Deploy:
         # TODO-1: chown -R odoo: /opt/odoo
         # TODO-2: With Linux "odoo" user.. import ERRORS for PyPDF2 etc.
         # chmod -R ugo+rx /usr/local/lib/python3.6/dist-packages/
-        self.supervisor()
+        if self.supervisor:
+            self.supervisor()
         
 if __name__ == '__main__':
     deploy = Deploy()
