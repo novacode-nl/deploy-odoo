@@ -22,8 +22,7 @@ services:
     volumes:
       - ./deploy:/root/deploy-odoo/deploy
       - ./deploy/runit:/roo/deploy-odoo/deploy/runit
-      # For Docker always asume development (dev) mode.
-      - ./odoo:/opt/odoo/dev
+      - ./odoo:/opt/odoo
     depends_on:
       - db
     ports:
