@@ -1,0 +1,6 @@
+[options]
+##############################
+# Choose either 1 of the modes
+##############################
+# mode = docker
+# mode = cloud

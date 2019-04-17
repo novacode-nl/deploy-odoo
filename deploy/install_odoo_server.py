@@ -25,12 +25,6 @@ class InstallOdooServer:
         apt_process = subprocess.Popen(command, shell=True)
         apt_process.wait()
 
-        # XXX node-less installed as packages, solved missing CSS
-        # issue. Also error shown: "Could not execute command 'lessc'"
-        print('* npm (less)')
-        subprocess.call(['apt-get', '-qq', 'install', 'npm'])
-        subprocess.call(['npm', 'install', '-g', 'less'])
-
         print('* wkhtmltopdf')
         subprocess.call(['wget', '-q', 'https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.bionic_amd64.deb'])
         subprocess.call(['gdebi', '--n', 'wkhtmltox_0.12.5-1.bionic_amd64.deb'])

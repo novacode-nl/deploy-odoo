@@ -3,9 +3,8 @@
 ## Branches recommendation
 
 It's strongly recommended to work with (Git) branches, to distinguish
-deployment stages (dev, staging, production).
-So you can isolate things like `deploy/config.cfg` settings and
-packages to install.
+deployment stages (development, staging, production).
+So you can isolate settings and packages to install.
 
 Example branches:
 
@@ -53,9 +52,9 @@ Make changes if needed.
 
 - `deploy/install_odoo_server.py`
   - Add/change OS and Python packages
-**!! TODO shall be moved to `config.cfg` !!**
+**!! TODO shall be moved to `deploy.cfg` !!**
 
-- Copy `config.cfg.docker` to `config.cfg`. Change settings if needed.
+- Copy `deploy.cfg.example` to `deploy.cfg`. Change settings if needed.
 
 - Put **Odoo Core** into `<PROJECT>/odoo/odoo`
 - Put **Enterprise** (if) into `<PROJECT>/odoo/enterprise`
@@ -79,12 +78,9 @@ Installs the Docker containers with required packages (OS, Python etc).
 
 ## Deploy - Cloud / on-premise
 
-### Requirement
-
-It's a requirement to `git clone` under `/root` (home-dir of root user).
+### Bootstrap
 
 ```
-cd /root
 git clone <URL>/deploy-odoo.git
 ```
 

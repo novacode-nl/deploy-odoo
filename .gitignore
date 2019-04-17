@@ -1,4 +1,5 @@
+deploy/deploy.cfg
 odoo
-!docker/odoo
-deploy/wkhtmlto*
+wkhtmlto*
 __pycache__
+!docker/odoo
