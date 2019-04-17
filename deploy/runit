@@ -16,4 +16,11 @@ deploy.odoo_custom()
 print('\n==== Odoo configuration ====')
 print('(i) odoo_root: %s' % deploy.odoo_root)
 
+# Remove file, with old/former config.
+# File gets re-created upon start odoo.
+try:
+    os.remove('/root/.odoorc')
+except OSError:
+    pass
+
 subprocess.run('./deploy/start_odoo.py', shell=True)
