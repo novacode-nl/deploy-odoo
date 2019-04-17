@@ -66,6 +66,8 @@ class StartOdoo:
         self.odoo_bin_options = options
 
     def set_odoo_bin(self):
+        if self.mode == 'docker':
+            self.odoo_bin_options.append('-s')
         options = ' '.join(self.odoo_bin_options)
         self.odoo_bin = '{odoo_bin_path} {options}'.format(
             odoo_bin_path=self.odoo_bin_path,
