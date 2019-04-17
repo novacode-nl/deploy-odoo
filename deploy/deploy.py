@@ -51,22 +51,22 @@ class Deploy:
 
         # Odoo Core
         self.odoo_build_dir = '{odoo_root}/odoo'.format(odoo_root=self.odoo_root)
-        self.odoo_git_url = self.common_cfg['apps.odoo.core']['git_url']
-        self.odoo_branch = self.common_cfg['apps.odoo.core']['branch']
+        self.odoo_git_url = self.common_cfg['odoo.core']['git_url']
+        self.odoo_branch = self.common_cfg['odoo.core']['branch']
 
         # Odoo Enterprise
-        self.with_enterprise = 'apps.odoo.enterprise' in self.common_cfg.sections()
+        self.with_enterprise = 'odoo.enterprise' in self.common_cfg.sections()
         if self.with_enterprise:
             self.enterprise_build_dir = '{odoo_root}/enterprise'.format(odoo_root=self.odoo_root)
-            self.enterprise_git_url = self.common_cfg['apps.odoo.enterprise']['git_url']
-            self.enterprise_branch = self.common_cfg['apps.odoo.enterprise']['branch']
+            self.enterprise_git_url = self.common_cfg['odoo.enterprise']['git_url']
+            self.enterprise_branch = self.common_cfg['odoo.enterprise']['branch']
 
         # Odoo Custom
-        self.with_custom = 'apps.odoo.custom' in self.common_cfg.sections()
+        self.with_custom = 'odoo.custom' in self.common_cfg.sections()
         if self.with_custom:
             self.custom_build_dir = '{odoo_root}/custom'.format(odoo_root=self.odoo_root)
-            self.custom_git_url = self.common_cfg['apps.odoo.custom']['git_url']
-            self.custom_branch = self.common_cfg['apps.odoo.custom']['branch']
+            self.custom_git_url = self.common_cfg['odoo.custom']['git_url']
+            self.custom_branch = self.common_cfg['odoo.custom']['branch']
 
     def set_odoo_root(self):
         self.odoo_root = self.deploy_cfg['server.odoo']['odoo_root']
