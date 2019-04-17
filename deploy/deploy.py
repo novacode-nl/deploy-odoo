@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
 
 import configparser
-import logging
 import os
 import subprocess
 import sys
-import uuid
 
 from git import Repo
-
-_logger = logging.getLogger(__name__)
 
 
 class Deploy:
@@ -17,8 +13,8 @@ class Deploy:
     def __init__(self):
 
         if not os.path.isfile('deploy/deploy.cfg'):
-            print('\n!!!! File "deploy/config.cfg" not exists !!!!')
-            print('Copy or check the file "deploy/config.cfg.example"')
+            print('\n!!!! File "deploy/deploy.cfg" not exists !!!!')
+            print('Copy or check the file "deploy/deploy.cfg.example"')
             sys.exit(1)
 
         deploy_cfg = configparser.ConfigParser()
@@ -27,11 +23,11 @@ class Deploy:
         self.mode = deploy_cfg['options']['mode']
 
         if self.mode == 'cloud':
-            self.config = configparser.ConfigParser()
-            self.config.read('deploy/deploy-cloud.cfg')
+            self.deploy_cfg = configparser.ConfigParser()
+            self.deploy_cfg.read('deploy/deploy-cloud.cfg')
         elif self.mode == 'docker':
-            self.config = configparser.ConfigParser()
-            self.config.read('deploy/deploy-docker.cfg')
+            self.deploy_cfg = configparser.ConfigParser()
+            self.deploy_cfg.read('deploy/deploy-docker.cfg')
         else:
             msg = 'n!!!! Unsupported mode: {mode}. Supported modes: cloud, docker !!!!'.format(
                 mode = deploy.cfg['options']['mode']
@@ -39,38 +35,41 @@ class Deploy:
             print(msg)
             sys.exit(1)
 
-        self.sys_user = self.config['server.odoo']['sys_user']
+        self.common_cfg = configparser.ConfigParser()
+        self.common_cfg.read('deploy/deploy-common.cfg')
+
+        self.sys_user = self.deploy_cfg['server.odoo']['sys_user']
 
         self.odoo_root = None
         self.set_odoo_root()
 
         # TODO improve setter
-        self.supervisor = True if self.config['server.odoo'].get('supervisor', False) == 'True' else False
+        self.supervisor = True if self.deploy_cfg['server.odoo'].get('supervisor', False) == 'True' else False
 
         
         self.odoo_log_dir = '{odoo_root}/var/log'.format(odoo_root=self.odoo_root)
 
         # Odoo Core
         self.odoo_build_dir = '{odoo_root}/odoo'.format(odoo_root=self.odoo_root)
-        self.odoo_git_url = self.config['apps.odoo.core']['git_url']
-        self.odoo_branch = self.config['apps.odoo.core']['branch']
+        self.odoo_git_url = self.common_cfg['apps.odoo.core']['git_url']
+        self.odoo_branch = self.common_cfg['apps.odoo.core']['branch']
 
         # Odoo Enterprise
-        self.with_enterprise = 'apps.odoo.enterprise' in self.config.sections()
+        self.with_enterprise = 'apps.odoo.enterprise' in self.common_cfg.sections()
         if self.with_enterprise:
             self.enterprise_build_dir = '{odoo_root}/enterprise'.format(odoo_root=self.odoo_root)
-            self.enterprise_git_url = self.config['apps.odoo.enterprise']['git_url']
-            self.enterprise_branch = self.config['apps.odoo.enterprise']['branch']
+            self.enterprise_git_url = self.common_cfg['apps.odoo.enterprise']['git_url']
+            self.enterprise_branch = self.common_cfg['apps.odoo.enterprise']['branch']
 
         # Odoo Custom
-        self.with_custom = 'apps.odoo.custom' in self.config.sections()
+        self.with_custom = 'apps.odoo.custom' in self.common_cfg.sections()
         if self.with_custom:
             self.custom_build_dir = '{odoo_root}/custom'.format(odoo_root=self.odoo_root)
-            self.custom_git_url = self.config['apps.odoo.custom']['git_url']
-            self.custom_branch = self.config['apps.odoo.custom']['branch']
+            self.custom_git_url = self.common_cfg['apps.odoo.custom']['git_url']
+            self.custom_branch = self.common_cfg['apps.odoo.custom']['branch']
 
     def set_odoo_root(self):
-        self.odoo_root = self.config['server.odoo']['odoo_root']
+        self.odoo_root = self.deploy_cfg['server.odoo']['odoo_root']
 
     def odoo_core(self):
         print("\n==== Deploy: Odoo Core ====\n")
