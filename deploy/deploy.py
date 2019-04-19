@@ -218,5 +218,6 @@ class Deploy:
             self.supervisor()
         
 if __name__ == '__main__':
-    deploy = Deploy()
+    path = os.path.dirname(os.path.abspath(__file__))
+    deploy = Deploy(path)
     deploy.run()
