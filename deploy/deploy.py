@@ -10,24 +10,30 @@ from git import Repo
 
 class Deploy:
 
-    def __init__(self):
+    def __init__(self, path):
 
-        if not os.path.isfile('deploy/deploy.cfg'):
+        self.path = path
+        self.path_deploy_cfg = '{path}/deploy.cfg'.format(path=path)
+        self.path_deploy_common_cfg = '{path}/deploy-common.cfg'.format(path=path)
+        self.path_deploy_cloud_cfg = '{path}/deploy-cloud.cfg'.format(path=path)
+        self.path_deploy_docker_cfg = '{path}/deploy-docker.cfg'.format(path=path)
+
+        if not os.path.isfile(self.path_deploy_cfg):
             print('\n!!!! File "deploy/deploy.cfg" not exists !!!!')
-            print('Copy or check the file "deploy/deploy.cfg.example"')
+            print('Copy or check the file "deploy/deploy.cfg.example"\n')
             sys.exit(1)
 
         deploy_cfg = configparser.ConfigParser()
-        deploy_cfg.read('deploy/deploy.cfg')
+        deploy_cfg.read(self.path_deploy_cfg)
 
         self.mode = deploy_cfg['options']['mode']
 
         if self.mode == 'cloud':
-            self.deploy_cfg = configparser.ConfigParser()
-            self.deploy_cfg.read('deploy/deploy-cloud.cfg')
+            self.mode_cfg = configparser.ConfigParser()
+            self.mode_cfg.read(self.path_deploy_cloud_cfg)
         elif self.mode == 'docker':
-            self.deploy_cfg = configparser.ConfigParser()
-            self.deploy_cfg.read('deploy/deploy-docker.cfg')
+            self.mode_cfg = configparser.ConfigParser()
+            self.mode_cfg.read(self.path_deploy_docker_cfg)
         else:
             msg = 'n!!!! Unsupported mode: {mode}. Supported modes: cloud, docker !!!!'.format(
                 mode = deploy.cfg['options']['mode']
@@ -36,17 +42,16 @@ class Deploy:
             sys.exit(1)
 
         self.common_cfg = configparser.ConfigParser()
-        self.common_cfg.read('deploy/deploy-common.cfg')
+        self.common_cfg.read(self.path_deploy_common_cfg)
 
-        self.sys_user = self.deploy_cfg['server.odoo']['sys_user']
+        self.sys_user = self.mode_cfg['server.odoo']['sys_user']
 
         self.odoo_root = None
         self.set_odoo_root()
 
         # TODO improve setter
-        self.supervisor = True if self.deploy_cfg['server.odoo'].get('supervisor', False) == 'True' else False
+        self.supervisor = True if self.mode_cfg['server.odoo'].get('supervisor', False) == 'True' else False
 
-        
         self.odoo_log_dir = '{odoo_root}/var/log'.format(odoo_root=self.odoo_root)
 
         # Odoo Core
@@ -69,7 +74,7 @@ class Deploy:
             self.custom_branch = self.common_cfg['odoo.custom']['branch']
 
     def set_odoo_root(self):
-        self.odoo_root = self.deploy_cfg['server.odoo']['odoo_root']
+        self.odoo_root = self.mode_cfg['server.odoo']['odoo_root']
 
     def odoo_core(self):
         print("\n==== Deploy: Odoo Core ====\n")
@@ -213,5 +218,6 @@ class Deploy:
             self.supervisor()
         
 if __name__ == '__main__':
-    deploy = Deploy()
+    path = os.path.dirname(os.path.abspath(__file__))
+    deploy = Deploy(path)
     deploy.run()
