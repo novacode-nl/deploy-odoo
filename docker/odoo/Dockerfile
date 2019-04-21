@@ -5,7 +5,7 @@ COPY deploy /root/deploy-odoo/deploy
 
 RUN apt-get -qq update && apt-get -qq install python3 python3-dev
 RUN /root/deploy-odoo/deploy/install_deploy_dependencies.py
-RUN /root/deploy-odoo/deploy/install_odoo_server.py
+RUN /root/deploy-odoo/deploy/install_odoo_dependencies.py
 
 # FIXME Crash on node-gyp. Needed for Odoo/Enterprise ?
 # nodejs npm node-clean-css node-less
