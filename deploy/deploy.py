@@ -66,12 +66,12 @@ class Deploy:
             self.enterprise_git_url = self.common_cfg['odoo.enterprise']['git_url']
             self.enterprise_branch = self.common_cfg['odoo.enterprise']['branch']
 
-        # Odoo Custom
-        self.with_custom = 'odoo.custom' in self.common_cfg.sections()
-        if self.with_custom:
-            self.custom_build_dir = '{odoo_root}/custom'.format(odoo_root=self.odoo_root)
-            self.custom_git_url = self.common_cfg['odoo.custom']['git_url']
-            self.custom_branch = self.common_cfg['odoo.custom']['branch']
+        # Odoo addons (custom, external etc)
+        self.with_addons = 'odoo.addons' in self.common_cfg.sections()
+        if self.with_addons:
+            self.addons_build_dir = '{odoo_root}/addons'.format(odoo_root=self.odoo_root)
+            self.addons_git_url = self.common_cfg['odoo.addons']['git_url']
+            self.addons_branch = self.common_cfg['odoo.addons']['branch']
 
     def set_odoo_root(self):
         self.odoo_root = self.mode_cfg['server.odoo']['odoo_root']
@@ -123,28 +123,28 @@ class Deploy:
                         filepath = os.path.join(root, file)
                         subprocess.call(['pip3', 'install', '-Ur', filepath])
 
-    def odoo_custom(self):
-        if not self.with_custom:
-            print("\n==== No Odoo Custom ====")
+    def odoo_addons(self):
+        if not self.with_addons:
+            print("\n==== No Odoo addons (custom, external) ====")
             return # No pip install -r requirements
 
-        print("\n==== Deploy: Odoo Custom ====")
-        print("(i) custom_build_dir: %s" % self.custom_build_dir)
+        print("\n==== Deploy: Odoo addons (custom, external) ====")
+        print("(i) addons_build_dir: %s" % self.addons_build_dir)
 
         if self.mode == 'docker':
-            if not os.path.exists(self.custom_build_dir):
+            if not os.path.exists(self.addons_build_dir):
                 # TODO check whether empty, because Docker volumes already mount.
                 print("\n!!!! Development/Docker ERROR !!!!")
-                print("* custom_build_dir not exists: %s" % self.custom_build_dir)
-                print("* Check the local Docker volume /odoo/custom")
-        elif not os.path.exists(self.custom_build_dir):
-            print("\n---- Git clone Custom ----")
-            Repo.clone_from(self.custom_git_url , self.custom_build_dir, branch=self.custom_branch, single_branch=True)
+                print("* addons_build_dir not exists: %s" % self.addons_build_dir)
+                print("* Check the local Docker volume /odoo/addons")
+        elif not os.path.exists(self.addons_build_dir):
+            print("\n---- Git clone addons ----")
+            Repo.clone_from(self.addons_git_url , self.addons_build_dir, branch=self.addons_branch, single_branch=True)
 
         # pip3 install -Ur requirements.txt
-        if os.path.exists(self.custom_build_dir):
-            print("\n* Find and install Python/pip Custom requirements\n")
-            for root, dirs, files in os.walk(self.custom_build_dir):
+        if os.path.exists(self.addons_build_dir):
+            print("\n* Find and install Python/pip addons requirements\n")
+            for root, dirs, files in os.walk(self.addons_build_dir):
                 for fname in files:
                     if fname == 'requirements.txt':
                         filepath = os.path.join(root, file)
@@ -154,7 +154,7 @@ class Deploy:
         # TODO async (concurrent clones)
         self.odoo_core()
         self.odoo_enterprise()
-        self.odoo_custom()
+        self.odoo_addons()
 
     def prepare_build(self):
         print("\n---- Prepare build ----")
