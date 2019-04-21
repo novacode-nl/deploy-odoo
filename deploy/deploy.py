@@ -10,24 +10,30 @@ from git import Repo
 
 class Deploy:
 
-    def __init__(self):
+    def __init__(self, path):
 
-        if not os.path.isfile('deploy/deploy.cfg'):
+        self.path = path
+        self.path_deploy_cfg = '{path}/deploy.cfg'.format(path=path)
+        self.path_deploy_common_cfg = '{path}/deploy-common.cfg'.format(path=path)
+        self.path_deploy_cloud_cfg = '{path}/deploy-cloud.cfg'.format(path=path)
+        self.path_deploy_docker_cfg = '{path}/deploy-docker.cfg'.format(path=path)
+
+        if not os.path.isfile(self.path_deploy_cfg):
             print('\n!!!! File "deploy/deploy.cfg" not exists !!!!')
-            print('Copy or check the file "deploy/deploy.cfg.example"')
+            print('Copy or check the file "deploy/deploy.cfg.example"\n')
             sys.exit(1)
 
         deploy_cfg = configparser.ConfigParser()
-        deploy_cfg.read('deploy/deploy.cfg')
+        deploy_cfg.read(self.path_deploy_cfg)
 
         self.mode = deploy_cfg['options']['mode']
 
         if self.mode == 'cloud':
-            self.deploy_cfg = configparser.ConfigParser()
-            self.deploy_cfg.read('deploy/deploy-cloud.cfg')
+            self.mode_cfg = configparser.ConfigParser()
+            self.mode_cfg.read(self.path_deploy_cloud_cfg)
         elif self.mode == 'docker':
-            self.deploy_cfg = configparser.ConfigParser()
-            self.deploy_cfg.read('deploy/deploy-docker.cfg')
+            self.mode_cfg = configparser.ConfigParser()
+            self.mode_cfg.read(self.path_deploy_docker_cfg)
         else:
             msg = 'n!!!! Unsupported mode: {mode}. Supported modes: cloud, docker !!!!'.format(
                 mode = deploy.cfg['options']['mode']
@@ -36,17 +42,16 @@ class Deploy:
             sys.exit(1)
 
         self.common_cfg = configparser.ConfigParser()
-        self.common_cfg.read('deploy/deploy-common.cfg')
+        self.common_cfg.read(self.path_deploy_common_cfg)
 
-        self.sys_user = self.deploy_cfg['server.odoo']['sys_user']
+        self.sys_user = self.mode_cfg['server.odoo']['sys_user']
 
         self.odoo_root = None
         self.set_odoo_root()
 
         # TODO improve setter
-        self.supervisor = True if self.deploy_cfg['server.odoo'].get('supervisor', False) == 'True' else False
+        self.supervisor = True if self.mode_cfg['server.odoo'].get('supervisor', False) == 'True' else False
 
-        
         self.odoo_log_dir = '{odoo_root}/var/log'.format(odoo_root=self.odoo_root)
 
         # Odoo Core
@@ -61,15 +66,15 @@ class Deploy:
             self.enterprise_git_url = self.common_cfg['odoo.enterprise']['git_url']
             self.enterprise_branch = self.common_cfg['odoo.enterprise']['branch']
 
-        # Odoo Custom
-        self.with_custom = 'odoo.custom' in self.common_cfg.sections()
-        if self.with_custom:
-            self.custom_build_dir = '{odoo_root}/custom'.format(odoo_root=self.odoo_root)
-            self.custom_git_url = self.common_cfg['odoo.custom']['git_url']
-            self.custom_branch = self.common_cfg['odoo.custom']['branch']
+        # Odoo addons (custom, external etc)
+        self.with_addons = 'odoo.addons' in self.common_cfg.sections()
+        if self.with_addons:
+            self.addons_build_dir = '{odoo_root}/addons'.format(odoo_root=self.odoo_root)
+            self.addons_git_url = self.common_cfg['odoo.addons']['git_url']
+            self.addons_branch = self.common_cfg['odoo.addons']['branch']
 
     def set_odoo_root(self):
-        self.odoo_root = self.deploy_cfg['server.odoo']['odoo_root']
+        self.odoo_root = self.mode_cfg['server.odoo']['odoo_root']
 
     def odoo_core(self):
         print("\n==== Deploy: Odoo Core ====\n")
@@ -118,28 +123,28 @@ class Deploy:
                         filepath = os.path.join(root, file)
                         subprocess.call(['pip3', 'install', '-Ur', filepath])
 
-    def odoo_custom(self):
-        if not self.with_custom:
-            print("\n==== No Odoo Custom ====")
+    def odoo_addons(self):
+        if not self.with_addons:
+            print("\n==== No Odoo addons (custom, external) ====")
             return # No pip install -r requirements
 
-        print("\n==== Deploy: Odoo Custom ====")
-        print("(i) custom_build_dir: %s" % self.custom_build_dir)
+        print("\n==== Deploy: Odoo addons (custom, external) ====")
+        print("(i) addons_build_dir: %s" % self.addons_build_dir)
 
         if self.mode == 'docker':
-            if not os.path.exists(self.custom_build_dir):
+            if not os.path.exists(self.addons_build_dir):
                 # TODO check whether empty, because Docker volumes already mount.
                 print("\n!!!! Development/Docker ERROR !!!!")
-                print("* custom_build_dir not exists: %s" % self.custom_build_dir)
-                print("* Check the local Docker volume /odoo/custom")
-        elif not os.path.exists(self.custom_build_dir):
-            print("\n---- Git clone Custom ----")
-            Repo.clone_from(self.custom_git_url , self.custom_build_dir, branch=self.custom_branch, single_branch=True)
+                print("* addons_build_dir not exists: %s" % self.addons_build_dir)
+                print("* Check the local Docker volume /odoo/addons")
+        elif not os.path.exists(self.addons_build_dir):
+            print("\n---- Git clone addons ----")
+            Repo.clone_from(self.addons_git_url , self.addons_build_dir, branch=self.addons_branch, single_branch=True)
 
         # pip3 install -Ur requirements.txt
-        if os.path.exists(self.custom_build_dir):
-            print("\n* Find and install Python/pip Custom requirements\n")
-            for root, dirs, files in os.walk(self.custom_build_dir):
+        if os.path.exists(self.addons_build_dir):
+            print("\n* Find and install Python/pip addons requirements\n")
+            for root, dirs, files in os.walk(self.addons_build_dir):
                 for fname in files:
                     if fname == 'requirements.txt':
                         filepath = os.path.join(root, file)
@@ -149,7 +154,7 @@ class Deploy:
         # TODO async (concurrent clones)
         self.odoo_core()
         self.odoo_enterprise()
-        self.odoo_custom()
+        self.odoo_addons()
 
     def prepare_build(self):
         print("\n---- Prepare build ----")
@@ -213,5 +218,6 @@ class Deploy:
             self.supervisor()
         
 if __name__ == '__main__':
-    deploy = Deploy()
+    path = os.path.dirname(os.path.abspath(__file__))
+    deploy = Deploy(path)
     deploy.run()

@@ -3,15 +3,15 @@
 import os
 import subprocess
 
-os.chdir('/root/deploy-odoo')
-
 from deploy import Deploy
-deploy = Deploy()
+
+path = os.path.dirname(os.path.abspath(__file__))
+deploy = Deploy(path)
 
 # deploy.build_odoo()
 deploy.odoo_core()
 deploy.odoo_enterprise()
-deploy.odoo_custom()
+deploy.odoo_addons()
 
 print('\n==== Odoo configuration ====')
 print('(i) odoo_root: %s' % deploy.odoo_root)
@@ -23,4 +23,5 @@ try:
 except OSError:
     pass
 
-subprocess.run('./deploy/start_odoo.py', shell=True)
+path_start_odoo = '{path}/start_odoo.py'.format(path=path)
+subprocess.run(path_start_odoo, shell=True)
