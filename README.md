@@ -56,7 +56,7 @@ Make changes if needed.
   - Add/change OS and Python packages
 **!! TODO shall be moved to `deploy.cfg` !!**
 
-- Copy `deploy.cfg.example` to `deploy.cfg`.
+- Copy `deploy/deploy.cfg.example` to `deploy/deploy.cfg`.
   - Ensure: `mode = docker`
 
 - Put **Odoo Core** into `<PROJECT>/odoo/odoo`
