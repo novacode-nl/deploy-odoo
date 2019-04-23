@@ -74,9 +74,9 @@ Installs the Docker containers with required packages (OS, Python etc).
 `./run`
 
 - Deploy Odoo Core by Git.
-- Also deploy Enterprise and/or Custom if configured in `config.cfg.docker`.
+- Also deploy Enterprise and/or Custom if configured in `deploy/deploy-common.cfg` and 'deploy/deploy-docker.cfg`.
 - Install Odoo/pip requirements.
-- Create the Odoo start command by `config.cfg.docker` options.
+- Create the Odoo start command by `deploy-docker.cfg` options.
 - Start the Odoo server.
 
 ## Deploy - Cloud / on-premise
@@ -111,14 +111,14 @@ Checkout (version) branch:
 
 ### Configuration
 
-#### `deploy.cfg`
+#### `deploy/deploy.cfg`
 
-- Copy `deploy.cfg.example` to `deploy.cfg`.
+- Copy `deploy/deploy.cfg.example` to `deploy/deploy.cfg`.
 - Ensure: `mode = cloud`
 
-#### `deploy-cloud.cfg`:
+#### `deploy/deploy-cloud.cfg`:
 
-Edit `deploy-cloud.cfg`
+Edit `deploy/deploy-cloud.cfg`
 
 Ensure the *db* credentials are set:
 - `db_user =`
@@ -151,9 +151,9 @@ From `/opt/approot`
 `./deploy-odoo/deploy/deploy.py`
 
 - Deploy Odoo Core by Git.
-- Also deploy Enterprise and/or addons (custom, external etc.), if configured in `deploy-common.cfg` and `deploy-cloud.cfg`.
+- Also deploy Enterprise and/or addons (custom, external etc.), if configured in `deploy/deploy-common.cfg` and `deploy/deploy-cloud.cfg`.
 - Install Odoo/pip requirements.
-- Creates the Odoo start command by `deploy-cloud.cfg` options. (TODO: Supervisor control).
+- Creates the Odoo start command by `deploy/deploy-cloud.cfg` options. (TODO: Supervisor control).
 
 ### Start/stop Odoo
 
