@@ -98,7 +98,6 @@ git clone <URL>/deploy-odoo.git
 Example:
 
 ```
-cd /root
 git clone https://github.com/novacode-nl/deploy-odoo.git
 ```
 
@@ -119,14 +118,14 @@ Checkout (version) branch:
 
 #### `deploy-cloud.cfg`:
 
-Edit `deploy-cloud.cfg
+Edit `deploy-cloud.cfg`
 
-Ensure configured settings:
-- `db_user`
-- `db_password`
+Ensure the *db* credentials are set:
+- `db_user =`
+- `db_password =`
 
-Optionally change to `build_system = True`
-For each `deploy.py` run a build directory (UUID) shall be created.
+Optionally change to `build_system = True`\
+For each `deploy.py` run, a build directory (UUID) shall be created.\
 On success the build directory shall be set as the `current` by symlink.
 
 ### Install PostgreSQL server
@@ -145,7 +144,7 @@ From `/opt/approot`
 
 Installs the required packages (OS, Python etc).
 
-### Deploy and start services
+### Deploy/build Odoo
 
 From `/opt/approot`
 
@@ -154,8 +153,14 @@ From `/opt/approot`
 - Deploy Odoo Core by Git.
 - Also deploy Enterprise and/or addons (custom, external etc.), if configured in `deploy-common.cfg` and `deploy-cloud.cfg`.
 - Install Odoo/pip requirements.
-- Create the Odoo start command by `deploy-cloud.cfg` options.
-- (TODO: Start the Odoo server managed by Supervisor)
+- Creates the Odoo start command by `deploy-cloud.cfg` options. (TODO: Supervisor control).
+
+### Start/stop Odoo
+
+Script `./deploy-odoo/deploy/start_odoo.py`
+
+Manually add the Odoo start/stop script, e.g. to Supervisor.
+(TODO: Start the Odoo server managed by Supervisor)
 
 ## Wkhtmltopdf
 
