@@ -159,7 +159,7 @@ From `/opt/approot`
 
 Script `./deploy-odoo/deploy/start_odoo.py`
 
-Manually add the Odoo start/stop script, e.g. to Supervisor.
+Manually add the Odoo start/stop script, e.g. to Supervisor.\
 (TODO: Start the Odoo server managed by Supervisor)
 
 ## Wkhtmltopdf
