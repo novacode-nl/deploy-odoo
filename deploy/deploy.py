@@ -191,8 +191,9 @@ class Deploy:
         odoo_server_log = '{log_dir}/odoo-server.log'.format(log_dir=self.odoo_log_dir)
         subprocess.call(['touch', odoo_server_log])
 
-        # TODO odoo (self.sys_user)
-        subprocess.call(['chown', '-R', 'odoo:', self.root_build_dir])
+    def finish_build(self):
+        user_grp = '{user}:'.format(user=self.sys_user)
+        subprocess.call(['chown', '-R', user_grp, self.root_build_dir])
 
     def switch_current_build(self):
         # TODO symlink previous build
@@ -241,9 +242,8 @@ class Deploy:
         self.prepare_build()
         self.build_odoo()
         self.switch_current_build()
+        self.finish_build()
         
-        # TODO-1: chown -R odoo: /opt/odoo
-        # TODO-2: With Linux "odoo" user.. import ERRORS for PyPDF2 etc.
         # chmod -R ugo+rx /usr/local/lib/python3.6/dist-packages/
         if self.supervisor:
             self.supervisor()
