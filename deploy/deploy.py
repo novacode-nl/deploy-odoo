@@ -4,6 +4,7 @@ import configparser
 import os
 import subprocess
 import sys
+import uuid
 
 from git import Repo
 
@@ -35,7 +36,7 @@ class Deploy:
             self.mode_cfg = configparser.ConfigParser()
             self.mode_cfg.read(self.path_deploy_docker_cfg)
         else:
-            msg = 'n!!!! Unsupported mode: {mode}. Supported modes: cloud, docker !!!!'.format(
+            msg = '\n!!!! Unsupported mode: {mode}. Supported modes: cloud, docker !!!!'.format(
                 mode = deploy.cfg['options']['mode']
             )
             print(msg)
@@ -46,35 +47,62 @@ class Deploy:
 
         self.sys_user = self.mode_cfg['server.odoo']['sys_user']
 
-        self.odoo_root = None
-        self.set_odoo_root()
+        # Build System
+        self.build_system = self.mode_cfg['server.odoo'].getboolean('build_system')
+        self.build_dir = None
+        self.set_build_dir()
+
+        # Odoo root/build dir
+        self.odoo_root_dir = self.mode_cfg['server.odoo']['odoo_root_dir']
+        self.root_build_dir = None
+        self.set_root_build_dir()
+        self.make_root_build_dir()
+
+        self.current_build_dir = None
+        self.set_current_build_dir()
 
         # TODO improve setter
-        self.supervisor = True if self.mode_cfg['server.odoo'].get('supervisor', False) == 'True' else False
+        self.supervisor = self.mode_cfg['server.odoo'].getboolean('supervisor')
 
-        self.odoo_log_dir = '{odoo_root}/var/log'.format(odoo_root=self.odoo_root)
+        self.odoo_log_dir = '{root_build_dir}/var/log'.format(root_build_dir=self.root_build_dir)
 
         # Odoo Core
-        self.odoo_build_dir = '{odoo_root}/odoo'.format(odoo_root=self.odoo_root)
+        self.odoo_build_dir = '{root_build_dir}/odoo'.format(root_build_dir=self.root_build_dir)
         self.odoo_git_url = self.common_cfg['odoo.core']['git_url']
         self.odoo_branch = self.common_cfg['odoo.core']['branch']
 
         # Odoo Enterprise
         self.with_enterprise = 'odoo.enterprise' in self.common_cfg.sections()
         if self.with_enterprise:
-            self.enterprise_build_dir = '{odoo_root}/enterprise'.format(odoo_root=self.odoo_root)
+            self.enterprise_build_dir = '{root_build_dir}/enterprise'.format(root_build_dir=self.root_build_dir)
             self.enterprise_git_url = self.common_cfg['odoo.enterprise']['git_url']
             self.enterprise_branch = self.common_cfg['odoo.enterprise']['branch']
 
         # Odoo addons (custom, external etc)
         self.with_addons = 'odoo.addons' in self.common_cfg.sections()
         if self.with_addons:
-            self.addons_build_dir = '{odoo_root}/addons'.format(odoo_root=self.odoo_root)
+            self.addons_build_dir = '{root_build_dir}/addons'.format(root_build_dir=self.root_build_dir)
             self.addons_git_url = self.common_cfg['odoo.addons']['git_url']
             self.addons_branch = self.common_cfg['odoo.addons']['branch']
 
-    def set_odoo_root(self):
-        self.odoo_root = self.mode_cfg['server.odoo']['odoo_root']
+    def set_build_dir(self):
+        if self.build_system:
+            self.build_dir = 'build.{uuid}'.format(uuid=str(uuid.uuid4()))
+
+    def set_root_build_dir(self):
+        if self.build_system and self.build_dir:
+            self.root_build_dir = '{odoo_root_dir}/{build_dir}'.format(
+                odoo_root_dir=self.odoo_root_dir,
+                build_dir=self.build_dir)
+        else:
+            self.root_build_dir = self.odoo_root_dir
+
+    def make_root_build_dir(self):
+         subprocess.call(['mkdir', '-p', self.root_build_dir])
+
+    def set_current_build_dir(self):
+        if self.build_system:
+            self.current_build_dir = '{odoo_root_dir}/current'.format(odoo_root_dir=self.odoo_root_dir)
 
     def odoo_core(self):
         print("\n==== Deploy: Odoo Core ====\n")
@@ -84,7 +112,7 @@ class Deploy:
             if not os.path.exists(self.odoo_build_dir):
                 print("\n!!!! Development/Docker ERROR !!!!")
                 print("* odoo_build_dir is invalid: %s" % self.odoo_build_dir)
-                print("* Check the local Docker volume /odoo/odoo")
+                print("* Check the local Docker volume /odoo/odoo\n")
                 sys.exit(1)
         elif not os.path.exists(self.odoo_build_dir):
             print("\n* Git clone Odoo")
@@ -109,7 +137,7 @@ class Deploy:
                 # TODO check whether empty, because Docker volumes already mount.
                 print("\n!!!! Development/Docker ERROR !!!!")
                 print("* enterprise_build_dir not exists: %s" % self.enterprise_build_dir)
-                print("* Check the local Docker volume /odoo/enterprise")
+                print("* Check the local Docker volume /odoo/enterprise\n")
         elif not os.path.exists(self.enterprise_build_dir):
             print("\n* Git clone Enterprise")
             Repo.clone_from(self.enterprise_git_url , self.enterprise_build_dir, branch=self.enterprise_branch, single_branch=True)
@@ -136,7 +164,7 @@ class Deploy:
                 # TODO check whether empty, because Docker volumes already mount.
                 print("\n!!!! Development/Docker ERROR !!!!")
                 print("* addons_build_dir not exists: %s" % self.addons_build_dir)
-                print("* Check the local Docker volume /odoo/addons")
+                print("* Check the local Docker volume /odoo/addons\n")
         elif not os.path.exists(self.addons_build_dir):
             print("\n---- Git clone addons ----")
             Repo.clone_from(self.addons_git_url , self.addons_build_dir, branch=self.addons_branch, single_branch=True)
@@ -164,13 +192,18 @@ class Deploy:
         subprocess.call(['touch', odoo_server_log])
 
         # TODO odoo (self.sys_user)
-        subprocess.call(['chown', '-R', 'odoo:', self.odoo_root])
+        subprocess.call(['chown', '-R', 'odoo:', self.root_build_dir])
 
-    # def switch_current_build(self):
-    #     print("\n==== Change current build ====")
-    #     print ('* %s -> %s' % (self.current_build, self.build_dir))
+    def switch_current_build(self):
+        # TODO symlink previous build
+        # TODO check path exists ?
+        if self.build_system and self.build_dir:
+            print("\n==== Swich current build ====")
+            print ('* %s -> %s' % (self.current_build_dir, self.build_dir))
+            subprocess.call(['ln', '-sfn', self.build_dir, self.current_build_dir])
 
-    #     subprocess.call(['ln', '-sfn', self.build_dir, self.current_build])
+    # def remove_old_build_dir(self):
+    #     # TODO remove old build dir(s)
 
     # def supervisor(self):
     #     print("\n---- Create Supervisor config file ----")
@@ -207,9 +240,7 @@ class Deploy:
     def run(self):
         self.prepare_build()
         self.build_odoo()
-
-        # TODO deploy/config.cfg
-        # self.switch_current_build()
+        self.switch_current_build()
         
         # TODO-1: chown -R odoo: /opt/odoo
         # TODO-2: With Linux "odoo" user.. import ERRORS for PyPDF2 etc.

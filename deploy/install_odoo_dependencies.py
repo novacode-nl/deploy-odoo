@@ -17,15 +17,15 @@ class InstallOdooDependencies:
 
     def set_apt_install_packages(self):
         self.apt_install = self.deploy.common_cfg['server.odoo']['apt_install']
-        if self.deploy.common_cfg['server.odoo']['apt_install_extras']:
-            self.apt_install_packages += ' {extras}'.format(
+        if self.deploy.common_cfg['server.odoo'].get('apt_install_extras'):
+            self.apt_install += ' {extras}'.format(
                 extras = self.deploy.common_cfg['server.odoo']['apt_install_extras'])
 
     def run(self):
         print('\n==== Install Odoo Server ====\n')
         print('* APT packages')
         command = 'apt-get -qq update && apt-get -qq upgrade && apt-get -qq install {packages}'.format(
-            packages = self.apt_install_packages)
+            packages=self.apt_install)
         apt_process = subprocess.Popen(command, shell=True)
         apt_process.wait()
 
