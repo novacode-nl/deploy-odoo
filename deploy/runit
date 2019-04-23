@@ -14,7 +14,7 @@ deploy.odoo_enterprise()
 deploy.odoo_addons()
 
 print('\n==== Odoo configuration ====')
-print('(i) odoo_root: %s' % deploy.odoo_root)
+print('(i) odoo_root_dir: %s' % deploy.odoo_root_dir)
 
 # Remove file, with old/former config.
 # File gets re-created upon start odoo.

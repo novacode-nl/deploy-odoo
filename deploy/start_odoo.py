@@ -16,9 +16,6 @@ class StartOdoo:
         path = os.path.dirname(os.path.abspath(__file__))
         self.deploy = Deploy(path)
 
-        self.odoo_root = None
-        self.set_odoo_root()
-
         self.odoo_bin_path = None
         self.set_odoo_bin_path()
 
@@ -28,11 +25,9 @@ class StartOdoo:
         self.odoo_bin = None
         self.set_odoo_bin()
 
-    def set_odoo_root(self):
-        self.odoo_root = self.deploy.mode_cfg['server.odoo']['odoo_root']
-
     def set_odoo_bin_path(self):
-        self.odoo_bin_path = '{odoo_root}/odoo/odoo-bin'.format(odoo_root=self.odoo_root)
+        self.odoo_bin_path = '{root_build_dir}/odoo/odoo-bin'.format(
+            root_build_dir=self.deploy.root_build_dir)
 
     def set_odoo_bin_options(self):
         """ odoo-bin command, with server specific configuration.
