@@ -10,9 +10,9 @@ So you can isolate settings and packages to install.
 
 Example branches:
 
-- `12.0`: Production
-- `12.0-staging`: Staging
-- `12.0-dev`: Development
+- `12.0` => production
+- `12.0-staging` => staging
+- `12.0-dev` => development
 
 ## Deploy - Docker
 
@@ -56,7 +56,8 @@ Make changes if needed.
   - Add/change OS and Python packages
 **!! TODO shall be moved to `deploy.cfg` !!**
 
-- Copy `deploy.cfg.example` to `deploy.cfg`. Change settings if needed.
+- Copy `deploy.cfg.example` to `deploy.cfg`.
+  - Ensure: `mode = docker`
 
 - Put **Odoo Core** into `<PROJECT>/odoo/odoo`
 - Put **Enterprise** (if) into `<PROJECT>/odoo/enterprise`
@@ -80,7 +81,15 @@ Installs the Docker containers with required packages (OS, Python etc).
 
 ## Deploy - Cloud / on-premise
 
-### Bootstrap
+### Bootstrap (Git)
+
+Recommendation is to create a directory, where the
+deployment tool and Odoo shall be placed. E.g: `/opt/approot`.
+
+```
+mkdir /opt/approot
+cd /opt/approot
+```
 
 ```
 git clone <URL>/deploy-odoo.git
@@ -95,29 +104,58 @@ git clone https://github.com/novacode-nl/deploy-odoo.git
 
 Shall result in:
 
-`/root/deploy-odoo`
+`/opt/approot/deploy-odoo`
+
+Checkout (version) branch:
+
+`git checkout <BRANCH>`
+
+### Configuration
+
+#### `deploy.cfg`
+
+- Copy `deploy.cfg.example` to `deploy.cfg`.
+- Ensure: `mode = cloud`
+
+#### `deploy-cloud.cfg`:
+
+Edit `deploy-cloud.cfg
+
+Ensure configured settings:
+- `db_user`
+- `db_password`
+
+Optionally change to `build_system = True`
+For each `deploy.py` run a build directory (UUID) shall be created.
+On success the build directory shall be set as the `current` by symlink.
 
 ### Install PostgreSQL server
 
 If the PostgreSQL server is on the same host, it's that easy.
 
-`./deploy/install_postgres_server.py`
+From `/opt/approot`
+
+`./deploy-odoo/deploy/install_postgres_server.py`
 
 ### Install the Odoo Linux (Debian, Ubuntu) server
 
-`./deploy/install_odoo_server.py`
+From `/opt/approot`
+
+`./deploy-odoo/deploy/install_odoo_server.py`
 
 Installs the required packages (OS, Python etc).
 
 ### Deploy and start services
 
-`./deploy/deploy.py`
+From `/opt/approot`
+
+`./deploy-odoo/deploy/deploy.py`
 
 - Deploy Odoo Core by Git.
-- Also deploy Enterprise and/or Custom if configured in `config.cfg.docker`.
+- Also deploy Enterprise and/or addons (custom, external etc.), if configured in `deploy-common.cfg` and `deploy-cloud.cfg`.
 - Install Odoo/pip requirements.
-- Create the Odoo start command by `config.cfg` options.
-- Start the Odoo server managed by Supervisor
+- Create the Odoo start command by `deploy-cloud.cfg` options.
+- (TODO: Start the Odoo server managed by Supervisor)
 
 ## Wkhtmltopdf
 
