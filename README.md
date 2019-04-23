@@ -116,7 +116,7 @@ Checkout (version) branch:
 - Copy `deploy/deploy.cfg.example` to `deploy/deploy.cfg`.
 - Ensure: `mode = cloud`
 
-#### `deploy/deploy-cloud.cfg`:
+#### `deploy/deploy-cloud.cfg`
 
 Edit `deploy/deploy-cloud.cfg`
 
