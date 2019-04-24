@@ -58,10 +58,10 @@ Make changes if needed.
   - Ensure: `mode = docker`
 
 - Edit `deploy/deploy-docker.cfg`
-  - Add custom/external addons to: `update = ` (comma separated). Otherwise Odoo shall crash due to ORM (reflection) error on database.
+  - Add custom/external addons to: `update =` (comma separated). Otherwise Odoo shall crash due to ORM (reflection) error on database.
 
 - Optionally edit `deploy/deploy-common.cfg`
-  - Add/change OS packages in `apt_install_extras = ` (space separated).
+  - Add/change OS packages in `apt_install_extras =` (space separated).
 
 - Put **Odoo Core** into `<PROJECT>/odoo/odoo`
 - Put **Enterprise** (if) into `<PROJECT>/odoo/enterprise`
@@ -87,12 +87,8 @@ Installs the Docker containers with required packages (OS, Python etc).
 
 ### Bootstrap (Git)
 
-Recommendation is to create a directory, where the
-deployment tool and Odoo shall be placed. E.g: `/opt/approot`.
-
 ```
-mkdir /opt/approot
-cd /opt/approot
+cd /opt
 ```
 
 ```
@@ -107,13 +103,18 @@ git clone https://github.com/novacode-nl/deploy-odoo.git
 
 Shall result in:
 
-`/opt/approot/deploy-odoo`
+`/opt/deploy-odoo`
 
 Checkout (version) branch:
 
-`git checkout <BRANCH>`
+```
+cd /opt/deploy-odoo
+git checkout <BRANCH>
+```
 
 ### Configuration
+
+From `/opt/deploy-odoo`
 
 #### `deploy/deploy.cfg`
 
@@ -136,13 +137,13 @@ On success the build directory shall be set as the `current` by symlink.
 
 If the PostgreSQL server is on the same host, it's that easy.
 
-From `/opt/approot`
+From `/opt`
 
 `./deploy-odoo/deploy/install_postgres_server.py`
 
 ### Install the Odoo Linux (Debian, Ubuntu) server
 
-From `/opt/approot`
+From `/opt`
 
 `./deploy-odoo/deploy/install_odoo_server.py`
 
@@ -150,7 +151,7 @@ Installs the required packages (OS, Python etc).
 
 ### Deploy/build Odoo
 
-From `/opt/approot`
+From `/opt`
 
 `./deploy-odoo/deploy/deploy.py`
 
@@ -161,7 +162,7 @@ From `/opt/approot`
 
 ### Start/stop Odoo
 
-Script `./deploy-odoo/deploy/start_odoo.py`
+Script `/opt/deploy-odoo/deploy/start_odoo.py`
 
 Manually add the Odoo start/stop script, e.g. to Supervisor.\
 (TODO: Start the Odoo server managed by Supervisor)
