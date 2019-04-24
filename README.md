@@ -1,6 +1,6 @@
 # deploy-odoo
 
-A tool to deploy Odoo in *Docker* or *on-premise* on a Debian/Ubuntu server.
+A tool to deploy Odoo in *Docker* or *on-premise* on a Ubuntu/Debian server.
 
 **!! Development should be done in the latest branch !!**
 
@@ -52,18 +52,20 @@ Make changes if needed.
   - **PostreSQL** version.
 
 - `docker/odoo/Dockerfile`
-  - **Ubuntu** version.
-
-- `deploy/install_odoo_server.py`
-  - Add/change OS and Python packages
-**!! TODO shall be moved to `deploy.cfg` !!**
+  - **Ubuntu/Debian** version.
 
 - Copy `deploy/deploy.cfg.example` to `deploy/deploy.cfg`.
   - Ensure: `mode = docker`
 
+- Edit `deploy/deploy-docker.cfg`
+  - Add custom/external addons to: `update = ` (comma separated). Otherwise Odoo shall crash due to ORM (reflection) error on database.
+
+- Optionally edit `deploy/deploy-common.cfg`
+  - Add/change OS packages in `apt_install_extras = ` (space separated).
+
 - Put **Odoo Core** into `<PROJECT>/odoo/odoo`
 - Put **Enterprise** (if) into `<PROJECT>/odoo/enterprise`
-- Put **Custom** (if) into `<PROJECT>/odoo/custom`
+- Put **addons** root-dir (if) into `<PROJECT>/odoo/addons`
 
 ### Install (init)
 
