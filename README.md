@@ -2,6 +2,8 @@
 
 A tool to deploy Odoo in *Docker* or *on-premise* on a Debian/Ubuntu server.
 
+**!! Development should be done in the latest branch !!**
+
 ## Branches recommendation
 
 It's strongly recommended to work with (Git) branches, to distinguish
