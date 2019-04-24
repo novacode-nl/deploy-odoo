@@ -10,9 +10,9 @@ So you can isolate settings and packages to install.
 
 Example branches:
 
-- `12.0` => production
-- `12.0-staging` => staging
-- `12.0-dev` => development
+- `11.0` => production
+- `11.0-staging` => staging
+- `11.0-dev` => development
 
 ## Deploy - Docker
 
