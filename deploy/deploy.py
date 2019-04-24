@@ -69,21 +69,21 @@ class Deploy:
         # Odoo Core
         self.odoo_build_dir = '{root_build_dir}/odoo'.format(root_build_dir=self.root_build_dir)
         self.odoo_git_url = self.common_cfg['odoo.core']['git_url']
-        self.odoo_branch = self.common_cfg['odoo.core']['branch']
+        self.odoo_git_branch = self.common_cfg['odoo.core']['git_branch']
 
         # Odoo Enterprise
         self.with_enterprise = 'odoo.enterprise' in self.common_cfg.sections()
         if self.with_enterprise:
             self.enterprise_build_dir = '{root_build_dir}/enterprise'.format(root_build_dir=self.root_build_dir)
             self.enterprise_git_url = self.common_cfg['odoo.enterprise']['git_url']
-            self.enterprise_branch = self.common_cfg['odoo.enterprise']['branch']
+            self.enterprise_git_branch = self.common_cfg['odoo.enterprise']['git_branch']
 
         # Odoo addons (custom, external etc)
         self.with_addons = 'odoo.addons' in self.common_cfg.sections()
         if self.with_addons:
             self.addons_build_dir = '{root_build_dir}/addons'.format(root_build_dir=self.root_build_dir)
             self.addons_git_url = self.common_cfg['odoo.addons']['git_url']
-            self.addons_branch = self.common_cfg['odoo.addons']['branch']
+            self.addons_git_branch = self.common_cfg['odoo.addons']['git_branch']
 
     def set_build_dir(self):
         if self.build_system:
@@ -116,7 +116,7 @@ class Deploy:
                 sys.exit(1)
         elif not os.path.exists(self.odoo_build_dir):
             print("\n* Git clone Odoo")
-            Repo.clone_from(self.odoo_git_url , self.odoo_build_dir, branch=self.odoo_branch, single_branch=True)
+            Repo.clone_from(self.odoo_git_url , self.odoo_build_dir, branch=self.odoo_git_branch, single_branch=True)
 
         # pip3 install -Ur requirements.txt
         if os.path.exists(self.odoo_build_dir):
@@ -140,7 +140,7 @@ class Deploy:
                 print("* Check the local Docker volume /odoo/enterprise\n")
         elif not os.path.exists(self.enterprise_build_dir):
             print("\n* Git clone Enterprise")
-            Repo.clone_from(self.enterprise_git_url , self.enterprise_build_dir, branch=self.enterprise_branch, single_branch=True)
+            Repo.clone_from(self.enterprise_git_url , self.enterprise_build_dir, branch=self.enterprise_git_branch, single_branch=True)
 
         # pip3 install -Ur requirements.txt
         if os.path.exists(self.enterprise_build_dir):
@@ -167,7 +167,7 @@ class Deploy:
                 print("* Check the local Docker volume /odoo/addons\n")
         elif not os.path.exists(self.addons_build_dir):
             print("\n---- Git clone addons ----")
-            Repo.clone_from(self.addons_git_url , self.addons_build_dir, branch=self.addons_branch, single_branch=True)
+            Repo.clone_from(self.addons_git_url , self.addons_build_dir, branch=self.addons_git_branch, single_branch=True)
 
         # pip3 install -Ur requirements.txt
         if os.path.exists(self.addons_build_dir):
