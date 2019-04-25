@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-# Primary used as the Docker (odoo) command.
-# TODO rename this file to "docker" maybe?
-
 import os
 import subprocess
 import sys
