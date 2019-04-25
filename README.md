@@ -30,7 +30,9 @@ Install Docker Compose by Python pip. To get latest stable version.
 
 `pip3 install docker-compose`
 
-### Git clone
+### Bootstrap (Git)
+
+#### Git clone
 
 To avoid clashes in Docker containers (naming), clone into a named
 target.
@@ -40,6 +42,10 @@ target.
 Example:
 
 `git clone https://github.com/novacode-nl/deploy-odoo.git novacode`
+
+#### Git checkout (version) branch
+
+`git checkout <BRANCH>`
 
 ### Configuration
 
@@ -87,6 +93,8 @@ Installs the Docker containers with required packages (OS, Python etc).
 
 ### Bootstrap (Git)
 
+#### Git clone
+
 ```
 cd /opt
 ```
@@ -105,12 +113,18 @@ Shall result in:
 
 `/opt/deploy-odoo`
 
-Checkout (version) branch:
+#### Git checkout (version) branch
 
 ```
 cd /opt/deploy-odoo
 git checkout <BRANCH>
 ```
+
+#### Recommendation, if placed by `root` user.
+
+Revoke permissions for other users.
+
+`chmod -R o-rwx /opt/deploy-odoo`
 
 ### Configuration
 
