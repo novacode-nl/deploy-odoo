@@ -2,8 +2,10 @@
 
 import os
 import subprocess
+import sys
 
 from deploy import Deploy
+from start_odoo import StartOdoo
 
 path = os.path.dirname(os.path.abspath(__file__))
 deploy = Deploy(path)
@@ -23,5 +25,7 @@ try:
 except OSError:
     pass
 
-path_start_odoo = '{path}/start_odoo.py'.format(path=path)
-subprocess.run(path_start_odoo, shell=True)
+if __name__ == '__main__':
+    argv = sys.argv[1:]
+    start_odoo = StartOdoo(argv)
+    start_odoo.run()
