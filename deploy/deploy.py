@@ -118,11 +118,11 @@ class Deploy:
             print("\n* Git clone Odoo")
             Repo.clone_from(self.odoo_git_url , self.odoo_build_dir, branch=self.odoo_git_branch, single_branch=True)
 
-        # pip3 install -Ur requirements.txt
+        # pip install -Ur requirements.txt
         if os.path.exists(self.odoo_build_dir):
             print("\n* Install Python/pip Odoo requirements\n")
             filepath = '{path}/requirements.txt'.format(path=self.odoo_build_dir)
-            subprocess.call(['pip3', 'install', '-Ur', filepath])
+            subprocess.call(['pip', 'install', '-Ur', filepath])
 
     def odoo_enterprise(self):
         if not self.with_enterprise:
@@ -142,14 +142,14 @@ class Deploy:
             print("\n* Git clone Enterprise")
             Repo.clone_from(self.enterprise_git_url , self.enterprise_build_dir, branch=self.enterprise_git_branch, single_branch=True)
 
-        # pip3 install -Ur requirements.txt
+        # pip install -Ur requirements.txt
         if os.path.exists(self.enterprise_build_dir):
             print("\n* Find and install Python/pip Enteprise requirements\n")
             for root, dirs, files in os.walk(self.enterprise_build_dir):
                 for fname in files:
                     if fname == 'requirements.txt':
                         filepath = os.path.join(root, file)
-                        subprocess.call(['pip3', 'install', '-Ur', filepath])
+                        subprocess.call(['pip', 'install', '-Ur', filepath])
 
     def odoo_addons(self):
         if not self.with_addons:
@@ -169,14 +169,14 @@ class Deploy:
             print("\n---- Git clone addons ----")
             Repo.clone_from(self.addons_git_url , self.addons_build_dir, branch=self.addons_git_branch, single_branch=True)
 
-        # pip3 install -Ur requirements.txt
+        # pip install -Ur requirements.txt
         if os.path.exists(self.addons_build_dir):
             print("\n* Find and install Python/pip addons requirements\n")
             for root, dirs, files in os.walk(self.addons_build_dir):
                 for fname in files:
                     if fname == 'requirements.txt':
                         filepath = os.path.join(root, file)
-                        subprocess.call(['pip3', 'install', '-Ur', filepath])
+                        subprocess.call(['pip', 'install', '-Ur', filepath])
 
     def build_odoo(self):
         # TODO async (concurrent clones)

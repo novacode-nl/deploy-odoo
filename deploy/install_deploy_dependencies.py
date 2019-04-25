@@ -13,7 +13,9 @@ class InstallDeployDependencies:
     def run(self):
         print('\n==== Install Deploy Dependencies ====\n')
         print('* APT packages')
-        command = 'apt-get -qq update && apt-get -qq upgrade && apt-get -qq install build-essential git python3 python3-dev python3-pip python3-setuptools'
+        # Python2.7 is required by Odoo
+        # Python(3) is required by this deployment tool (deploy-odoo)
+        command = 'apt-get -qq update && apt-get -qq upgrade && apt-get -qq install build-essential git python2.7 python2.7-dev python-pip python-setuptools python3 python3-dev python3-pip python3-setuptools'
         apt_process = subprocess.Popen(command, shell=True)
         apt_process.wait()
 
