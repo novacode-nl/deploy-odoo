@@ -1,0 +1,15 @@
+version: '3'
+
+# WARNING:
+# If you add/change odoo-bin options here, the Docker container shall be
+# rebuild.  All filesystem additions (Odoo filestore e.g. attachments) are
+# lost then.
+
+services:
+  odoo:
+    command:
+      - "./root/deploy-odoo/deploy/runit"
+      - "--http-port=8071"
+    ports:
+      # Keep port mapping equal to ensure `report.url` works.
+      - 8071:8071

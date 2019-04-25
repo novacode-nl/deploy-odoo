@@ -26,7 +26,6 @@ services:
     depends_on:
       - db
     ports:
-      # XXX
-      # - Ensure (Odoo) port equals: deploy/config.cfg
-      # - Keep port mapping equal to ensure `report.url` works.
+      # Keep port mapping equal to ensure `report.url` works.
+      # Change with docker-compose.override.yml (see example).
       - 8069:8069
