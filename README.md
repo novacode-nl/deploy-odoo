@@ -4,7 +4,7 @@ A tool to deploy Odoo in *Docker* or *on-premise* on a Ubuntu/Debian server.
 
 **!! Development should be done in the latest branch !!**
 
-## Enivronments recommendation
+## Environments recommendation
 
 In the `envs` directory one should create a directory for each
 environment to deploy. So you can distinguish settings and packages to
