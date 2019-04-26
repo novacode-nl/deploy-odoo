@@ -4,17 +4,31 @@ A tool to deploy Odoo in *Docker* or *on-premise* on a Ubuntu/Debian server.
 
 **!! Development should be done in the latest branch !!**
 
-## Branches recommendation
+## Enivronments recommendation
 
-It's strongly recommended to work with (Git) branches, to distinguish
-deployment stages (development, staging, production).
-So you can isolate settings and packages to install.
+In the `envs` directory one should create a directory for each
+environment to deploy. So you can distinguish settings and packages to
+install.
 
-Example branches:
+To start with a clean or new environment, just copy the directory
+`envs/example` to `envs/<NAME>`.
 
-- `11.0` => production
-- `11.0-staging` => staging
-- `11.0-dev` => development
+It's **not recommended** to work with "Git branches" to distinguish environments. This leads to
+troubles due to merging, like overwritten config (cfg) files.
+
+**Examples of `envs` directories**
+
+```
+envs/
+  production/
+    deploy-cloud.cfg
+    deploy-common.cfg
+    deploy-docker.cfg
+  staging/
+    deploy-cloud.cfg
+    deploy-common.cfg
+    deploy-docker.cfg
+```
 
 ## Deploy - Docker
 

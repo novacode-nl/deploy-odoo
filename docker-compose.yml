@@ -21,6 +21,7 @@ services:
     tty: true
     volumes:
       - ./deploy:/root/deploy-odoo/deploy
+      - ./envs:/root/deploy-odoo/envs
       - ./deploy/runit:/roo/deploy-odoo/deploy/runit
       - ./odoo:/opt/odoo
     depends_on:
