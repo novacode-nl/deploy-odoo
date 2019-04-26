@@ -1,6 +1,5 @@
 [options]
-##############################
-# Choose either 1 of the modes
-##############################
-# mode = docker
-# mode = cloud
+## env: one of directory names under `envs` dir.
+# env = 
+## mode: cloud, docker
+# mode = 
