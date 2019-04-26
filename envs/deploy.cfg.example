@@ -1,5 +1,5 @@
 [options]
+# mode: cloud, docker
+mode =
 # env: one of directory names under `envs` dir.
 env = 
-# mode: cloud, docker
-mode = 
