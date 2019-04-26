@@ -13,7 +13,7 @@ install.
 To start with a clean or new environment, just copy the directory
 `envs/example` to `envs/<NAME>`.
 
-It's *not recommended* to work with "Git branches". This leads to
+It's **not recommended** to work with "Git branches" to distinguish environments. This leads to
 troubles due to merging, like overwritten config (cfg) files.
 
 **Examples of `envs` directories**
