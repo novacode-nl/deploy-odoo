@@ -6,10 +6,6 @@ import subprocess
 
 class InstallDeployDependencies:
 
-    def __init__(self):
-        self.config = configparser.ConfigParser()
-        self.config.read('deploy/config.cfg')
-
     def run(self):
         print('\n==== Install Deploy Dependencies ====\n')
         print('* APT packages')

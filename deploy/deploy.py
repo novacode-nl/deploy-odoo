@@ -14,20 +14,24 @@ class Deploy:
     def __init__(self, path):
 
         self.path = path
-        self.path_deploy_cfg = '{path}/deploy.cfg'.format(path=path)
-        self.path_deploy_common_cfg = '{path}/deploy-common.cfg'.format(path=path)
-        self.path_deploy_cloud_cfg = '{path}/deploy-cloud.cfg'.format(path=path)
-        self.path_deploy_docker_cfg = '{path}/deploy-docker.cfg'.format(path=path)
+
+        self.path_deploy_cfg = '{path}/../envs/deploy.cfg'.format(path=path)
+        self.deploy_cfg = configparser.ConfigParser()
+        self.deploy_cfg.read(self.path_deploy_cfg)
+
+        self.env = self.deploy_cfg['options']['env']
+        self.path_env = '{path}/../envs/{env}'.format(path=self.path, env=self.env)
+
+        self.path_deploy_common_cfg = '{path_env}/deploy-common.cfg'.format(path_env=self.path_env)
+        self.path_deploy_cloud_cfg = '{path_env}/deploy-cloud.cfg'.format(path_env=self.path_env)
+        self.path_deploy_docker_cfg = '{path_env}/deploy-docker.cfg'.format(path_env=self.path_env)
 
         if not os.path.isfile(self.path_deploy_cfg):
             print('\n!!!! File "deploy/deploy.cfg" not exists !!!!')
             print('Copy or check the file "deploy/deploy.cfg.example"\n')
             sys.exit(1)
 
-        deploy_cfg = configparser.ConfigParser()
-        deploy_cfg.read(self.path_deploy_cfg)
-
-        self.mode = deploy_cfg['options']['mode']
+        self.mode = self.deploy_cfg['options']['mode']
 
         if self.mode == 'cloud':
             self.mode_cfg = configparser.ConfigParser()

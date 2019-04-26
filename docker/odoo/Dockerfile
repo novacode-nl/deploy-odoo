@@ -2,6 +2,7 @@ FROM ubuntu:18.04
 
 RUN mkdir /root/deploy-odoo
 COPY deploy /root/deploy-odoo/deploy
+COPY envs /root/deploy-odoo/envs
 
 RUN apt-get -qq update && apt-get -qq install python3 python3-dev
 RUN /root/deploy-odoo/deploy/install_deploy_dependencies.py
