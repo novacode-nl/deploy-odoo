@@ -1,4 +1,4 @@
-deploy/deploy.cfg
+envs/deploy.cfg
 odoo
 wkhtmlto*
 __pycache__
