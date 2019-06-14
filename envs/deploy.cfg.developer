@@ -1,0 +1,5 @@
+[options]
+# mode: cloud, docker
+mode = docker
+# env: one of directory names under `envs` dir.
+env = developer
