@@ -13,7 +13,7 @@ install.
 To start with a **clean or new environment**, just copy the directory
 **`envs/example`** to **`envs/<NAME>`**.
 
-Use **`envs/developer`** for **local development purposes**. It just needs
+For **local development purposes**, use **`envs/developer`**. It just needs
 the following files, which can be copied e.g. from the `envs/example`
 directory.
 - `deploy-common.cfg`
