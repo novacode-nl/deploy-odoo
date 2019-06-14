@@ -10,8 +10,8 @@ In the `envs` directory one should create a directory for each
 environment to deploy. So you can distinguish settings and packages to
 install.
 
-To start with a *clean or new environment*, just copy the directory
-`envs/example` to `envs/<NAME>`.
+To start with a **clean or new environment**, just copy the directory
+**`envs/example`** to **`envs/<NAME>`**.
 
 Use **`envs/developer`** for local development purposes. It just needs
 the following files, which can be copied e.g. from the `envs/example`
