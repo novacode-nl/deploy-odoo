@@ -10,11 +10,11 @@ In the `envs` directory one should create a directory for each
 environment to deploy. So you can distinguish settings and packages to
 install.
 
-To start with a clean or new environment, just copy the directory
+To start with a *clean or new environment*, just copy the directory
 `envs/example` to `envs/<NAME>`.
 
 Use **`envs/developer`** for local development purposes. It just needs
-following files, which can be copied e.g. from the `envs/example`
+the following files, which can be copied e.g. from the `envs/example`
 directory.
 - `deploy-common.cfg`
 - `deploy-docker.cfg`
@@ -83,8 +83,7 @@ Make changes if needed.
 - `docker/odoo/Dockerfile`
   - **Ubuntu/Debian** version.
 
-- Copy `deploy/deploy.cfg.example` to `deploy/deploy.cfg`.
-  - Ensure: `mode = docker`
+- Copy `deploy/deploy.cfg.developer` to `deploy/deploy.cfg`. Which has already has the settings.
 
 - Edit `deploy/deploy-docker.cfg`
   - Add custom/external addons to: `update =` (comma separated). Otherwise Odoo shall crash due to ORM (reflection) error on database.
