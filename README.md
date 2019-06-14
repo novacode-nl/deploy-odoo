@@ -6,12 +6,18 @@ A tool to deploy Odoo in *Docker* or *on-premise* on a Ubuntu/Debian server.
 
 ## Environments recommendation
 
-In the `envs` directory one should create a directory for each
+In the `envs` directory you shall create a directory for each
 environment to deploy. So you can distinguish settings and packages to
 install.
 
-To start with a clean or new environment, just copy the directory
-`envs/example` to `envs/<NAME>`.
+To start with a **clean or new environment**, just copy the directory
+**`envs/example`** to **`envs/<NAME>`**.
+
+For **local development purposes**, use **`envs/developer`**. It just needs
+the following files, which can be copied e.g. from the `envs/example`
+directory.
+- `deploy-common.cfg`
+- `deploy-docker.cfg`
 
 It's **not recommended** to work with "Git branches" to distinguish environments. This leads to
 troubles due to merging, like overwritten config (cfg) files.
@@ -20,6 +26,9 @@ troubles due to merging, like overwritten config (cfg) files.
 
 ```
 envs/
+  developer/
+    deploy-common.cfg
+    deploy-docker.cfg
   production/
     deploy-cloud.cfg
     deploy-common.cfg
@@ -74,8 +83,7 @@ Make changes if needed.
 - `docker/odoo/Dockerfile`
   - **Ubuntu/Debian** version.
 
-- Copy `deploy/deploy.cfg.example` to `deploy/deploy.cfg`.
-  - Ensure: `mode = docker`
+- Copy `deploy/deploy.cfg.developer` to `deploy/deploy.cfg`. Which has already has the settings.
 
 - Edit `deploy/deploy-docker.cfg`
   - Add custom/external addons to: `update =` (comma separated). Otherwise Odoo shall crash due to ORM (reflection) error on database.
