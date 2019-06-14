@@ -13,6 +13,12 @@ install.
 To start with a clean or new environment, just copy the directory
 `envs/example` to `envs/<NAME>`.
 
+Use **`envs/developer`** for local development purposes. It just needs
+following files, which can be copied e.g. from the `envs/example`
+directory.
+- `deploy-common.cfg`
+- `deploy-docker.cfg`
+
 It's **not recommended** to work with "Git branches" to distinguish environments. This leads to
 troubles due to merging, like overwritten config (cfg) files.
 
@@ -20,6 +26,9 @@ troubles due to merging, like overwritten config (cfg) files.
 
 ```
 envs/
+  developer/
+    deploy-common.cfg
+    deploy-docker.cfg
   production/
     deploy-cloud.cfg
     deploy-common.cfg
